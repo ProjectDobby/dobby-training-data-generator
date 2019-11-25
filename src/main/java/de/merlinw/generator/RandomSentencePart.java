@@ -11,7 +11,6 @@ public class RandomSentencePart {
 
     private Map<String, List<String>> placeholderSets = new HashMap<>();
     private List<String> dataSet;
-    private String slot;
     private int chance;
 
     public static RandomSentencePart partFrom(String name, String... placeholderFiles) throws IOException {
@@ -70,7 +69,7 @@ public class RandomSentencePart {
                     if (!part.contains("(" + slot.split(":")[0] + ")")) continue;
                     List<String> phs = placeholderSets.get(slot);
                     Collections.shuffle(phs);
-                    part = part.replaceFirst("\\(" + slot.split(":")[0] + "\\)", "[" + phs.get(0) + "](" + slot.split(":")[1] + ")");
+                    part = part.replaceFirst("\\(" + slot.split(":")[0] + "\\)", Main.Engine.formatSlot(slot.split(":")[1], phs.get(0)));
                 }
             }
         } catch (Exception e) {

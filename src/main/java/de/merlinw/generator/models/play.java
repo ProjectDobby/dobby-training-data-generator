@@ -1,6 +1,7 @@
 package de.merlinw.generator.models;
 
 import de.merlinw.generator.Model;
+import de.merlinw.generator.classes.BaseModel;
 
 import java.io.IOException;
 
@@ -8,9 +9,9 @@ import static de.merlinw.generator.Model.ModelFrom;
 import static de.merlinw.generator.RandomSentencePart.partFrom;
 import static de.merlinw.generator.RandomSentencePartCollection.collectionFrom;
 
-public class play {
+public class play extends BaseModel {
 
-    public static Model getModel() throws IOException {
+    public Model getModel() throws IOException {
         return ModelFrom(
                 collectionFrom(
                         partFrom(80, "TRACK", "s:scope", "t:track", "a:artist"),

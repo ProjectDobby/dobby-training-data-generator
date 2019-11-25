@@ -1,5 +1,8 @@
 package de.merlinw.generator;
 
+import de.merlinw.generator.classes.BaseEngine;
+import de.merlinw.generator.classes.BaseModel;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -10,15 +13,17 @@ public class Main {
 
     public static boolean canRun = true;
     public static String Model;
+    public static BaseEngine Engine;
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
         if (args.length < 2) {
             System.out.println("Please execute with 2 arguments (1: model name, 2: dataset amount)");
             System.exit(1);
         }
 
         Model = args[0];
-
+        Engine = getEngine(args.length > 2 ? args[2] : "OpenNLP");
+        
         File datasetFolder = new File("datasets." + args[0].toLowerCase());
         if (!datasetFolder.exists() || !datasetFolder.isDirectory()) {
             datasetFolder.mkdir();
@@ -48,8 +53,12 @@ public class Main {
             System.out.println("Model files for model " + args[0] + " generated. Please fill with data and restart.");
     }
 
-    private static Model getModel(String name) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
-        return (Model) Main.class.getClassLoader().loadClass("de.merlinw.generator.models." + name).getDeclaredMethod("getModel").invoke(Model.class);
+    private static Model getModel(String name) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException, IOException {
+        return ((BaseModel) Main.class.getClassLoader().loadClass("de.merlinw.generator.models." + name).getDeclaredConstructor().newInstance()).getModel();
+    }
+
+    private static BaseEngine getEngine(String name) throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        return (BaseEngine) Main.class.getClassLoader().loadClass("de.merlinw.generator.engines." + name).getDeclaredConstructor().newInstance();
     }
 
 }
